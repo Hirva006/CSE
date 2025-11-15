@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Manage Flights — Admin — Travelo</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<link rel="stylesheet" href="../style.css" />
+</head>
+<body class="bg-gray-50">
+
+  <div class="flex min-h-screen">
+    <aside class="w-64 bg-white border-r p-4 admin-sidebar">
+      <h2 class="text-xl font-bold text-indigo-600 mb-6">Admin</h2>
+      
+      <!-- Theme Toggle -->
+      <button id="themeToggle" class="flex items-center justify-center bg-gray-100 hover:bg-gray-200 text-gray-800 p-2 rounded-full w-10 h-10 mb-4 transition-all duration-300 hover:shadow-lg hover:shadow-indigo-300/40">
+        <svg id="sunIcon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m8.66-9h1M4.34 12h1m12.02 6.36l.7.7M6.93 6.93l.7.7m10.6 0l-.7.7M6.93 17.07l.7-.7M12 8a4 4 0 100 8 4 4 0 000-8z" />
+        </svg>
+        <svg id="moonIcon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z" />
+        </svg>
+      </button>
+      
+      <nav class="flex flex-col gap-2 text-sm">
+        <a href="dashboard.html" class="py-2 px-3 rounded hover:bg-gray-100">Dashboard</a>
+        <a href="manage-flights.html" class="py-2 px-3 rounded bg-indigo-50">Flights</a>
+        <a href="manage-hotels.html" class="py-2 px-3 rounded hover:bg-gray-100">Hotels</a>
+        <a href="manage-packages.html" class="py-2 px-3 rounded hover:bg-gray-100">Packages</a>
+        <a href="../index.html" class="py-2 px-3 rounded hover:bg-gray-100">View Site</a>
+      </nav>
+    </aside>
+
+    <main class="flex-1 p-8">
+      <div class="flex items-center justify-between">
+        <h1 class="text-2xl font-bold">Manage Flights</h1>
+        <button id="addFlightBtn" class="btn btn-primary">Add New Flight</button>
+      </div>
+
+      <div class="mt-6 bg-white rounded shadow p-4">
+        <table id="flightsTable" class="table table-striped">
+          <thead>
+            <tr><th>Flight ID</th><th>From</th><th>To</th><th>Date</th><th>Price</th><th>Actions</th></tr>
+          </thead>
+          <tbody>
+            <!-- rows added by js/script.js init -->
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <!-- Add Flight Modal -->
+  <div id="flightModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6 modal-content">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl font-bold">Add New Flight</h2>
+        <button id="closeModal" class="text-gray-500 hover:text-gray-700 text-2xl leading-none">&times;</button>
+      </div>
+      
+      <form id="flightForm" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Flight ID</label>
+          <input type="text" id="flightId" name="flightId" required 
+                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" 
+                 placeholder="e.g., F003">
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">From</label>
+          <input type="text" id="flightFrom" name="flightFrom" required 
+                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" 
+                 placeholder="e.g., Mumbai">
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">To</label>
+          <input type="text" id="flightTo" name="flightTo" required 
+                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" 
+                 placeholder="e.g., Dubai">
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Date</label>
+          <input type="date" id="flightDate" name="flightDate" required 
+                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Price</label>
+          <div class="relative">
+            <span class="absolute left-3 top-2 text-gray-500">₹</span>
+            <input type="number" id="flightPrice" name="flightPrice" required min="0"
+                   class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" 
+                   placeholder="8,200">
+          </div>
+        </div>
+        
+        
+        <div class="flex gap-3 pt-4">
+          <button type="submit" class="flex-1 bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition-colors">
+            Save Flight
+          </button>
+          <button type="button" id="cancelBtn" class="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 transition-colors">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+<script src="../js/script.js"></script>
+<script>
+  // Flight Modal Functionality
+  const flightModal = document.getElementById('flightModal');
+  const addFlightBtn = document.getElementById('addFlightBtn');
+  const closeModal = document.getElementById('closeModal');
+  const cancelBtn = document.getElementById('cancelBtn');
+  const flightForm = document.getElementById('flightForm');
+  const modalContent = document.querySelector('.modal-content');
+
+  // Open modal
+  addFlightBtn.addEventListener('click', () => {
+    flightModal.classList.remove('hidden');
+    setTimeout(() => {
+      modalContent.classList.add('scale-100', 'opacity-100');
+    }, 10);
+  });
+
+  // Close modal function
+  function closeFlightModal() {
+    modalContent.classList.remove('scale-100', 'opacity-100');
+    setTimeout(() => {
+      flightModal.classList.add('hidden');
+      flightForm.reset();
+    }, 200);
+  }
+
+  // Close modal on X button
+  closeModal.addEventListener('click', closeFlightModal);
+
+  // Close modal on Cancel button
+  cancelBtn.addEventListener('click', closeFlightModal);
+
+  // Close modal when clicking outside
+  flightModal.addEventListener('click', (e) => {
+    if (e.target === flightModal) {
+      closeFlightModal();
+    }
+  });
+
+  // Handle form submission
+  flightForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    const flightId = document.getElementById('flightId').value.trim();
+    const flightFrom = document.getElementById('flightFrom').value.trim();
+    const flightTo = document.getElementById('flightTo').value.trim();
+    const flightDate = document.getElementById('flightDate').value;
+    const flightPrice = document.getElementById('flightPrice').value;
+    
+    // Format price with commas
+    const formattedPrice = '₹' + Number(flightPrice).toLocaleString('en-IN');
+    
+    // Add row to table
+    addTableRow('flightsTable', [flightId, flightFrom, flightTo, flightDate, formattedPrice]);
+    
+    // Close modal
+    closeFlightModal();
+  });
+
+  // Add transition classes for smooth animation
+  modalContent.style.transition = 'all 0.2s ease-out';
+  modalContent.style.transform = 'scale(0.95)';
+  modalContent.style.opacity = '0';
+</script>
+</body>
+</html>
